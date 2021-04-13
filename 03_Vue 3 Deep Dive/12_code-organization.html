@@ -1,0 +1,47 @@
+<script>
+
+import { reactive, ref, computed, watchEffect, watch, onMounted } from 'vue'
+
+function useFeatureB() {
+    const user = ref({firstname: 'Pesho', lastname: 'Petrov'})
+    const fullname = computed(() => user.firstname.value + " " + user.lastname.value)
+    function isAuthorized() {}        
+    watchEffect(() => {})
+
+    //return what you want to expose in component
+    return {
+        user,
+        fullname
+    }
+}
+
+export default {
+    template: `<div>{{ foo }}</div>`,
+    props: ['id'],    
+    setup(props) {
+        /* logically group code by feature */
+        
+        //feature A
+        const foo = ref(0)
+        const plusOne = computed(() => foo.value + 1)
+        function incrementFoo() {}        
+        watchEffect(() => {})
+
+        //feature B
+        const {user, fullname} = useFeatureB()
+
+        //feature C
+        const {bar} = useFeatureC()
+
+        //return template render context
+        return {
+            foo,
+            plusOne,
+            user,
+            fullname,
+            bar
+        }
+    }    
+}
+
+</script>

@@ -1,0 +1,49 @@
+<!-- COMPONENT THAT TRACK POSITION OF THE MOUSE (using High Order Components from options API in Vue 2) -->
+
+<!-- with Higher Order Components we do not worry about namespacing collisions
+but when wrapping more components it is still difficult to know which property from which is coming from -->
+
+<script src="https://unpkg.com/vue@next"></script>
+
+<div id="app"></div>
+
+<script>
+const { createApp, h } = Vue
+
+function withMouse(Inner){
+    //return another component which wraps Inner component
+    return {
+        data() {
+            return {
+                x: 0,
+                y: 0
+            }
+        },
+        methods: {
+            update(e) {
+                this.x = e.pageX
+                this.y = e.pageY
+            }
+        },
+        mounted() {        
+            window.addEventListener('mousemove', this.update)
+        },
+        unmounted(){
+            window.removeEventListener('mousemove', this.update)
+        },
+        render() {
+            return h(Inner, {
+                x: this.x,
+                y: this.y
+            })
+        }
+    }
+}
+
+const App = withMouse({
+    template: `{{ x }} {{ y }}`,
+    props: ['x', 'y']
+})
+
+createApp(App).mount('#app')
+</script>

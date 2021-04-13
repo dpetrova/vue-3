@@ -1,0 +1,75 @@
+<script>
+
+import { reactive, ref, computed, watchEffect, watch, onMounted } from 'vue'
+
+function useFeature() {
+    onMounted(() =>  console.log('mounted!'))
+}
+
+export default {
+    template: `<div>{{ state.count }}</div>`,
+    props: ['id'],
+    /* fetch data -> old way in Vue2 */
+    // created(){
+    //     this.fetchData(this.id)
+    // },
+    // watch: {
+    //     id: 'fetchData'
+    // },
+    // methods: {
+    //     fetchData(id){
+    //         //....
+    //     }
+    // },
+    setup(props) {
+        const state = reactive({count: 0})
+
+        //watchEffect takes a function and runs it immediately
+        watchEffect(() =>  console.log(state.count))
+
+        //watch take a source (e.g function that return something) and have a callback
+        //watch is lazy by default, its callback is called only when the source is changed
+        watch(() => state.count, (newval, oldVal) => {
+
+        })
+
+        const count = ref(0)
+        const plusOne = computed(() => state.count + 1)
+        watch(count, (newVal, oldVal) => {
+
+        })
+        watch(plusOne, (newVal, oldVal) => {
+
+        })
+        watch([count, plusOne], ([newCount, newPlusOne], [oldCount, oldPlusOne]) => {
+
+        })
+
+        onMounted(() =>  console.log('mounted!'))
+
+        useFeature()
+
+        /* fetch data -> new way in Vue3 */
+        const fetchedData = ref(null)
+        watch(() => {
+            fetch(`url${props.id}`) //because it relies on props.id, it will rerun every time when props.id is changed
+            .then(res => res.json())
+            .then(data => fetchedData.value = data)
+        })
+
+        //how a component re-renders
+        // watchEffect(() => {
+        //     const oldTree = component.vnode
+        //     const newTree = component.render.call(renderContext)
+        //     patch(oldTree, newTree)
+        // })
+
+        //return template render context
+        return {
+            state,
+            increment: () => { state.count++ }
+        }
+    }    
+}
+
+</script>

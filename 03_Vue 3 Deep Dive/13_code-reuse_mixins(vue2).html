@@ -1,0 +1,44 @@
+<!-- COMPONENT THAT TRACK POSITION OF THE MOUSE (using MIXINS from options API in Vue 2) -->
+
+<!-- problem with mixins arise when we include several mixins and each of them inject own data: 
+- may confuse which property is coming from which mixin
+- namespace collisions -->
+
+<script src="https://unpkg.com/vue@next"></script>
+
+<div id="app"></div>
+
+<script>
+const { createApp } = Vue
+const MouseMixin = {
+    data() {
+        return {
+            x: 0,
+            y: 0
+        }
+    },
+    methods: {
+        update(e) {
+            this.x = e.pageX
+            this.y = e.pageY
+        }
+    },
+    mounted() {
+        // window.addEventListener('mousemove', e => {
+        //     this.x = e.pageX
+        //     this.y = e.pageY
+        // })
+        window.addEventListener('mousemove', this.update)
+    },
+    unmounted(){
+        window.removeEventListener('mousemove', this.update)
+    }
+}
+
+const App = {
+    template: `{{ x }} {{ y }}`,
+    mixins: [MouseMixin]
+}
+
+createApp(App).mount('#app')
+</script>

@@ -1,0 +1,45 @@
+<!-- COMPONENT THAT TRACK POSITION OF THE MOUSE (using COMPOSITION API from Vue 3) -->
+
+<!-- with copmosition API is clear what property by which component is injected,
+it is also possible to rename injected properties, to avoid naming collisions -->
+
+
+<script src="https://unpkg.com/vue@next"></script>
+
+<div id="app"></div>
+
+<script>
+const { createApp, h, ref, onMounted, onUnmounted } = Vue
+
+function useMouse() {
+    const x = ref(0)
+    const y = ref(0)
+
+    const update = e => {
+        x.value = e.pageX
+        y.value = e.pageY
+    }
+
+    onMounted(() => {
+        window.addEventListener('mousemove', update)
+    }) 
+
+    onUnmounted(() => {
+        window.removeEventListener('mousemove', update)
+    })
+
+    return {x, y}
+}
+
+const App = {
+    template: `{{ x }} {{ y }}`,
+    setup() {
+        //return { ...useMouse() }
+        const { x, y } = useMouse()
+        //const { x: z } = useAnotherfeature() //example to rename properties to avoid naming collisions
+        return { x, y }        
+    }
+}
+
+createApp(App).mount('#app')
+</script>
