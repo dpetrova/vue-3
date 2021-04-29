@@ -63,3 +63,5 @@ export default {
   align-items: center;
 }
 </style>
+
+json-server.typicode.com/dpetrova/vue-3/tree/main/05_Real%20World%20Vue%203/events
