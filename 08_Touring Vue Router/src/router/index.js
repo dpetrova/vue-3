@@ -7,7 +7,7 @@ import EventEdit from '../views/event/Edit.vue'
 import About from '../views/About.vue'
 import NotFound from '@/views/NotFound.vue'
 import NetworkError from '@/views/NetworkError.vue'
-import NProgress from 'nprogress'  //import the NProgress library
+import NProgress from 'nprogress' //import the NProgress library
 import EventService from '@/services/EventService.js'
 import GStore from '@/store'
 
@@ -27,7 +27,7 @@ const routes = [
   {
     path: '/events/:id',
     name: 'EventLayout',
-    props: true, //specifying props:true to send the id part of the URL as a prop into the components
+    //props: true, //specifying props:true to send the id part of the URL as a prop into the components
     component: EventLayout,
     //move the API call from created() hook in component into Per-Route beforeRouteEnter Guard, so we ensure the API call is successful before we load the component
     beforeEnter: to => {
@@ -38,7 +38,7 @@ const routes = [
         .catch(error => {
           if (error.response && error.response.status == 404) {
             return {
-              //if event doesn't exist -> redirect to 404 NotFound
+              //if event doesn't exist -> return a path to redirect to 404 NotFound
               name: '404Resource',
               params: { resource: 'event' }
             }
@@ -77,20 +77,20 @@ const routes = [
   //   redirect: () => { //the id in the URL will get passed along automatically when we redirect
   //     return { name: 'EventDetails' }
   //   },
-  //   //redirect nested children routes:  
+  //   //redirect nested children routes:
   //   children: [
   //     { path: 'register', redirect: () => ({ name: 'EventRegister' }) },
   //     { path: 'edit', redirect: () => ({ name: 'EventEdit' }) }
   //   ]
   // },
-  // 2. redirect with wildcard:  
+  // 2. redirect with wildcard:
   {
     //this is taking whatever comes after the matching word /event/ and placing it after /events/. This is less code, and covers all children routes:
     path: '/event/:afterEvent(.*)', //using (.*) will include / in the match (by default it doesn't)
     redirect: to => {
       return { path: '/events/' + to.params.afterEvent }
-    }    
-  },  
+    }
+  },
   {
     path: '/about',
     name: 'About',
@@ -105,8 +105,8 @@ const routes = [
   //   component: About
   // },
   // 2. since there might be links around the internet to our /about page, we want to make that redirect from /about to /about-us:
-  // { 
-  //   path: '/about', 
+  // {
+  //   path: '/about',
   //   redirect: { name: "about" }
   // },
   // 3. use alias (meaning just provide a duplicate path to the same content):
@@ -143,7 +143,7 @@ const router = createRouter({
   routes
 })
 
-//call NProgress in Global Route Guards:
+//4. call NProgress in Global Route Guards:
 
 router.beforeEach(() => {
   //start progress bar when routing to the component

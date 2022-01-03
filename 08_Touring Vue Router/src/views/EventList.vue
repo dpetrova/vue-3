@@ -30,11 +30,11 @@
 import EventCard from '@/components/EventCard.vue'
 import EventService from '@/services/EventService.js'
 //import { watchEffect } from 'vue'
-import NProgress from 'nprogress'  //import the NProgress library
+//import NProgress from 'nprogress' //import the NProgress library
 
 export default {
   name: 'EventList',
-  props: ['page'], //the current page: this prop will be received from the route query, 
+  props: ['page'], //the current page: this prop will be received from the route query,
   components: {
     EventCard
   },
@@ -46,7 +46,7 @@ export default {
   },
   //problem:
   //we cannot call EventService.getEvents() in created hook, because created() is only called on initial load, and it is not getting called again when we go to the next page, because it's not reloading the component
-  //it is a coomon problem where you want to reload a component with a change only of query parameters: the router sees that we're loading the same EventList named route, so it doesn’t need to reload the component
+  //it is a common problem where you want to reload a component with a change only of query parameters: the router sees that we're loading the same EventList named route, so it doesn’t need to reload the component
   //solution (two ways):
   //1.Tell the router to reload components in router-view when the full URL changes, including the query parameters, by using $route.fullPath as it's key:
   // <router-view :key="$route.fullPath" />
@@ -57,7 +57,7 @@ export default {
   //     NProgress.start() //start the progress bar
   //     EventService.getEvents(2, this.page)
   //       .then(response => {
-  //         this.events = response.data          
+  //         this.events = response.data
   //         this.totalEvents = response.headers['x-total-count'] //JSON Server sending us the total events via a "x-total-count" header
   //       })
   //       .catch(error => {
@@ -70,7 +70,7 @@ export default {
   //   })
   // },
   //3.Use In-Component Route Navigation Guards:
-  beforeRouteEnter(routeTo, routeFrom, next) {   
+  beforeRouteEnter(routeTo, routeFrom, next) {
     EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
       .then(response => {
         //sending in a function to next will cause that function to be run inside the component once it’s loaded, essentially setting our reactive properties
@@ -83,23 +83,22 @@ export default {
         next({ name: 'NetworkError' })
       })
   },
-  beforeRouteUpdate(routeTo, routeFrom, next) {    
-    NProgress.start() //start the progress bar
+  beforeRouteUpdate(routeTo) {
+    //NProgress.start() //start the progress bar
     return EventService.getEvents(2, parseInt(routeTo.query.page) || 1)
-      .then(response => {        
+      .then(response => {
         this.events = response.data
         this.totalEvents = response.headers['x-total-count']
-        next() //call next to continue navigation
       })
       .catch(() => {
-        next({ name: 'NetworkError' })
+        return { name: 'NetworkError' }
       })
       .finally(() => {
-        NProgress.done() //whether or not the API call succeed or fail, finish the progress bar
+        //NProgress.done() //whether or not the API call succeed or fail, finish the progress bar
       })
   },
   computed: {
-    hasNextPage() {      
+    hasNextPage() {
       var totalPages = Math.ceil(this.totalEvents / 2) //calculate totalPages as totalItems/itemsPerPage
       return this.page < totalPages //check to see if the current page is less than the total pages
     }

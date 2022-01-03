@@ -1,5 +1,5 @@
 <template>
-  <div id="app"> 
+  <div id="app">
     <!-- Suspense component has two slots: default and fallback     -->
     <Suspense>
       <!-- within the default slot, we put a component that can load asynchronously -->
@@ -16,10 +16,10 @@
 </template>
 
 <script>
-import MailScreen from '@/components/MailScreen.vue';
+import MailScreen from "@/components/MailScreen.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     MailScreen
   }
@@ -61,12 +61,12 @@ button.selected {
   cursor: pointer;
 }
 
-input[type='checkbox'] {
-  -webkit-appearance:none;
+input[type="checkbox"] {
+  -webkit-appearance: none;
   cursor: pointer;
-  width:24px;
-  height:24px;
-  background:white;
+  width: 24px;
+  height: 24px;
+  background: white;
   border-radius: 2px;
   border: 1px solid #555;
   position: relative;
@@ -74,11 +74,11 @@ input[type='checkbox'] {
   padding: 10px;
 }
 
-input[type='checkbox'].partial-check {
-  background: #ABC;
+input[type="checkbox"].partial-check {
+  background: #abc;
 }
 
-input[type='checkbox']:checked {
+input[type="checkbox"]:checked {
   background: #679;
 }
 
@@ -88,7 +88,8 @@ input[type='checkbox']:checked {
 
 /* Modal */
 
-.modal, .overlay {
+.modal,
+.overlay {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -125,7 +126,7 @@ input[type='checkbox']:checked {
   border-collapse: collapse;
 }
 .mail-table tr.read {
-  background-color: #EEE;
+  background-color: #eee;
 }
 .mail-table tr {
   height: 40px;
