@@ -4,7 +4,8 @@ import EventLayout from '../views/event/Layout.vue'
 import EventDetails from '../views/event/Details.vue'
 import EventRegister from '../views/event/Register.vue'
 import EventEdit from '../views/event/Edit.vue'
-import About from '../views/About.vue'
+//import About from '../views/About.vue'
+//const About = () => import(/* webpackChunkName: "about" */ '../views/About.vue') //lazy loaded: this anonymous function tells Vue to not load this code until it is requested
 import NotFound from '@/views/NotFound.vue'
 import NetworkError from '@/views/NetworkError.vue'
 import NProgress from 'nprogress' //import the NProgress library
@@ -63,7 +64,9 @@ const routes = [
       {
         path: 'edit', // events/:id/edit
         name: 'EventEdit',
-        component: EventEdit
+        component: EventEdit,
+        meta: { requireAuth: true } //meta information that can be used any place where we have access to a route object (usually in the to or from arguments)
+        /*when using children routes, we can place meta options on our parent route, and it will automatically get inherited by children routes */
       }
     ]
   },
@@ -94,7 +97,10 @@ const routes = [
   {
     path: '/about',
     name: 'About',
-    component: About,
+    //component: About,
+    // route level code-splitting: this generates a separate chunk (about.[hash].js) for this route, which is lazy-loaded when the route is visited
+    component: () =>
+      import(/* webpackChunkName: "about" */ '../views/About.vue'),
     alias: '/about-us' //another path to the same content
   },
   //Changing Routes problem: what if we needed to change our application from using /about for our about page to /about-us. There are 3 solutions:
@@ -140,14 +146,40 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition //when we hit the back button, we will be brought back to where we just left
+    } else {
+      return { top: 0 } // always scroll to top
+    }
+  }
 })
 
 //4. call NProgress in Global Route Guards:
 
-router.beforeEach(() => {
+router.beforeEach((to, from) => {
   //start progress bar when routing to the component
   NProgress.start()
+
+  //authorization restriction
+  const notAuthorized = true //TODO:calling an authorization method that perform the authorization
+  if (to.meta.requireAuth && notAuthorized) {
+    GStore.flashMessage = 'Sorry, you are not authorized to view this page'
+
+    setTimeout(() => {
+      GStore.flashMessage = ''
+    }, 3000)
+
+    // if this navigation came from a previous page
+    if (from.href) {
+      return false //telling Vue Router to simply stop the navigation
+    }
+    // it must be navigating directly
+    else {
+      return { path: '/' } // push navigation to the root route
+    }
+  }
 })
 
 router.afterEach(() => {
