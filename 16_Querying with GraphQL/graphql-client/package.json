@@ -1,0 +1,24 @@
+{
+  "name": "graphql-client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.7.16",
+    "@rollup/plugin-graphql": "1",
+    "@vue/apollo-composable": "^4.0.0-beta.7",
+    "graphql": "15",
+    "graphql-tag": "^2.12.6",
+    "subscriptions-transport-ws": "^0.11.0",
+    "vue": "^3.2.47"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.1.0",
+    "vite": "^4.3.9"
+  }
+}

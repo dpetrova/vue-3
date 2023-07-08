@@ -1,0 +1,10 @@
+#import './book.fragment.gql'
+
+query favoriteBooks {
+  #the @client directive makes Apollo Client only search for the required data in the cache; if there’s nothing in this cache, the client won’t reach out to the server to fetch anything
+  favoriteBooks @client {
+    id
+    title
+    rating
+  }
+}

@@ -1,0 +1,9 @@
+subscription bookSubscription {
+  bookSub {
+    id
+    title
+    author
+    year
+    rating
+  }
+}

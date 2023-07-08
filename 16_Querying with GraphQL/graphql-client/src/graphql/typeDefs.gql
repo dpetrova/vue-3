@@ -1,0 +1,9 @@
+# define a local-side schema
+# tell the Apollo Client that we will have one more query/mutation in addition to those defined in GraphQL server
+extend type Query {
+  favoriteBooks: [Book!]
+}
+
+extend type Mutation {
+  addBookToFavorites(book: Book!): [Book]
+}
